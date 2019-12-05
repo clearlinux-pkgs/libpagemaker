@@ -4,7 +4,7 @@
 #
 Name     : libpagemaker
 Version  : 0.0.4
-Release  : 2
+Release  : 3
 URL      : https://dev-www.libreoffice.org/src/libpagemaker-0.0.4.tar.xz
 Source0  : https://dev-www.libreoffice.org/src/libpagemaker-0.0.4.tar.xz
 Summary  : Library for importing and converting PageMaker Documents
