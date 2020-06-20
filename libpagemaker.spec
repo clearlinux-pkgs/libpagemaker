@@ -4,15 +4,15 @@
 #
 Name     : libpagemaker
 Version  : 0.0.4
-Release  : 4
+Release  : 5
 URL      : https://dev-www.libreoffice.org/src/libpagemaker-0.0.4.tar.xz
 Source0  : https://dev-www.libreoffice.org/src/libpagemaker-0.0.4.tar.xz
 Summary  : Library for importing and converting PageMaker Documents
 Group    : Development/Tools
 License  : MPL-2.0-no-copyleft-exception
-Requires: libpagemaker-bin
-Requires: libpagemaker-lib
-Requires: libpagemaker-license
+Requires: libpagemaker-bin = %{version}-%{release}
+Requires: libpagemaker-lib = %{version}-%{release}
+Requires: libpagemaker-license = %{version}-%{release}
 BuildRequires : boost-dev
 BuildRequires : doxygen
 BuildRequires : pkgconfig(librevenge-0.0)
@@ -27,7 +27,7 @@ older versions might work, but they are untested.
 %package bin
 Summary: bin components for the libpagemaker package.
 Group: Binaries
-Requires: libpagemaker-license
+Requires: libpagemaker-license = %{version}-%{release}
 
 %description bin
 bin components for the libpagemaker package.
@@ -36,9 +36,10 @@ bin components for the libpagemaker package.
 %package dev
 Summary: dev components for the libpagemaker package.
 Group: Development
-Requires: libpagemaker-lib
-Requires: libpagemaker-bin
-Provides: libpagemaker-devel
+Requires: libpagemaker-lib = %{version}-%{release}
+Requires: libpagemaker-bin = %{version}-%{release}
+Provides: libpagemaker-devel = %{version}-%{release}
+Requires: libpagemaker = %{version}-%{release}
 
 %description dev
 dev components for the libpagemaker package.
@@ -55,7 +56,7 @@ doc components for the libpagemaker package.
 %package lib
 Summary: lib components for the libpagemaker package.
 Group: Libraries
-Requires: libpagemaker-license
+Requires: libpagemaker-license = %{version}-%{release}
 
 %description lib
 lib components for the libpagemaker package.
@@ -71,28 +72,37 @@ license components for the libpagemaker package.
 
 %prep
 %setup -q -n libpagemaker-0.0.4
+cd %{_builddir}/libpagemaker-0.0.4
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1534634476
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1592623884
+export GCC_IGNORE_WERROR=1
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %configure --disable-static --disable-werror
 make  %{?_smp_mflags}
 
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1534634476
+export SOURCE_DATE_EPOCH=1592623884
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/doc/libpagemaker
-cp COPYING %{buildroot}/usr/share/doc/libpagemaker/COPYING
+mkdir -p %{buildroot}/usr/share/package-licenses/libpagemaker
+cp %{_builddir}/libpagemaker-0.0.4/COPYING %{buildroot}/usr/share/package-licenses/libpagemaker/9744cedce099f727b327cd9913a1fdc58a7f5599
 %make_install
 
 %files
@@ -121,5 +131,5 @@ cp COPYING %{buildroot}/usr/share/doc/libpagemaker/COPYING
 /usr/lib64/libpagemaker-0.0.so.0.0.4
 
 %files license
-%defattr(-,root,root,-)
-/usr/share/doc/libpagemaker/COPYING
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/libpagemaker/9744cedce099f727b327cd9913a1fdc58a7f5599
